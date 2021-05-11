@@ -57,16 +57,20 @@ class App extends React.Component {
             </div>
           </div>
           <div className="list">
-            {displayMovies.map((movie, index) => {
-              return (
-                <MovieCard
-                  movie={movie}
-                  key={`movies-${index}`}
-                  dispatch={this.props.store.dispatch}
-                  isMovieFavourite={this.isMovieFavourite(movie)}
-                />
-              );
-            })}
+            {displayMovies.length === 0 ? (
+              <p>No movies to display</p>
+            ) : (
+              displayMovies.map((movie, index) => {
+                return (
+                  <MovieCard
+                    movie={movie}
+                    key={`movies-${index}`}
+                    dispatch={this.props.store.dispatch}
+                    isMovieFavourite={this.isMovieFavourite(movie)}
+                  />
+                );
+              })
+            )}
           </div>
         </div>
       </div>
