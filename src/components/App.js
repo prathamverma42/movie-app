@@ -3,66 +3,60 @@ import { data } from "../data";
 
 import Navbar from "../components/Navbar";
 import MovieCard from "../components/MovieCard";
-import { addMovies } from "../actions/index";
+import { addMovies, showFavourites } from "../actions/index";
 
 class App extends React.Component {
-  // const [show, setShow] = useState('movies');
   componentDidMount() {
     const { store } = this.props;
+
     store.subscribe(() => {
       console.log("UPDATED");
       this.forceUpdate();
       console.log(store.getState());
     });
+
     store.dispatch(addMovies(data));
   }
 
-  show = true;
-
   isMovieFavourite = (movie) => {
     const { favourites } = this.props.store.getState();
-    // console.log()
+
     const index = favourites.indexOf(movie);
-    // console.log("hello");
+
     if (index !== -1) {
       return true;
     }
+
     return false;
   };
 
-  UnFavouriteMovie = () => {};
-  showfav = () => {
-    console.log("nsdslgng");
-    this.show = false;
-    console.log(this.show);
+  show_fav_all_movies = (val) => {
+    this.props.store.dispatch(showFavourites(val));
   };
 
   render() {
-    const { list, favourites } = this.props.store.getState();
+    const { list, favourites, showfav } = this.props.store.getState();
+    const movies = showfav ? favourites : list;
     return (
       <div className="App">
         <Navbar />
         <div className="main">
           <div className="tabs">
-            <div className="tab">Movies</div>
-            <div className="tab" onChangeTab={this.showfav}>
+            <div
+              className={`tab ${showfav ? "" : "active-tabs"}`}
+              onClick={() => this.show_fav_all_movies(false)}
+            >
+              Movies
+            </div>
+            <div
+              className={`tab ${showfav ? "active-tabs" : ""}`}
+              onClick={() => this.show_fav_all_movies(true)}
+            >
               Favourites
             </div>
           </div>
           <div className="list">
-            <h1>MOVIES</h1>
-            {list.map((movie, index) => {
-              return (
-                <MovieCard
-                  movie={movie}
-                  key={`movies-${index}`}
-                  dispatch={this.props.store.dispatch}
-                  isMovieFavourite={this.isMovieFavourite(movie)}
-                />
-              );
-            })}
-            <h1>Favourites</h1>
-            {favourites.map((movie, index) => {
+            {movies.map((movie, index) => {
               return (
                 <MovieCard
                   movie={movie}
