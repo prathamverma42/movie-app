@@ -5,13 +5,13 @@ import {
   SHOW_FAVOURITES,
 } from "../actions/index";
 
-const initialState = {
+const initialMovieState = {
   list: [],
   favourites: [],
   showfav: false,
 };
 
-export default function movies(state = initialState, action) {
+export function movies(state = initialMovieState, action) {
   switch (action.type) {
     case ADD_MOVIES:
       return {
@@ -55,4 +55,26 @@ export default function movies(state = initialState, action) {
         ...state,
       };
   }
+}
+
+
+const intitalSearchState = {
+  result: {}
+}
+
+export function search(state=intitalSearchState,action){
+  return state
+}
+
+
+const initialRootReducer = {
+  movies : initialMovieState,
+  search : intitalSearchState
+}
+
+export default function rootReducer(state = initialRootReducer, action) {
+    return {
+      movies: movies(state.movies,action),
+      search: search(state.search,action),
+    }  
 }
